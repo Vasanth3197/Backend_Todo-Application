@@ -38,16 +38,19 @@ const hasPriorityAndStatusAndCategoryProperties = (requestQuery) => {
     requestQuery.category !== undefined
   );
 };
+
 const hasPriorityAndStatusProperties = (requestQuery) => {
   return (
     requestQuery.priority !== undefined && requestQuery.status !== undefined
   );
 };
+
 const hasStatusAndCategoryProperties = (requestQuery) => {
   return (
     requestQuery.status !== undefined && requestQuery.category !== undefined
   );
 };
+
 const hasCategoryAndPriorityProperties = (requestQuery) => {
   return (
     requestQuery.category !== undefined && requestQuery.priority !== undefined
@@ -78,6 +81,7 @@ const convertDbArrayToResponseObj = (array) => {
     };
   });
 };
+
 const convertDbObjToResponseObj = (item) => {
   return {
     id: item.id,
@@ -88,6 +92,7 @@ const convertDbObjToResponseObj = (item) => {
     dueDate: item.due_date,
   };
 };
+
 const checkErrorCaseQuery = (request, response, next) => {
   const { priority, status, category } = request.query;
   if (
@@ -118,6 +123,7 @@ const checkErrorCaseQuery = (request, response, next) => {
     next();
   }
 };
+
 const checkErrorCaseBody = (request, response, next) => {
   const { priority, status, category, dueDate } = request.body;
   //   console.log(new Date(dueDate));
@@ -152,10 +158,12 @@ const checkErrorCaseBody = (request, response, next) => {
     next();
   }
 };
+
 let getDateFmt = (date) => {
   return format(new Date(date), "yyyy-MM-dd");
 };
-//GET Todos
+
+//GET Todos API
 app.get("/todos/", checkErrorCaseQuery, async (request, response) => {
   let data = null;
   let getTodosQuery = "";
@@ -251,7 +259,7 @@ app.get("/todos/", checkErrorCaseQuery, async (request, response) => {
   response.send(convertDbArrayToResponseObj(data));
 });
 
-//Get Specific Todo
+//Get Specific Todo API
 app.get("/todos/:todoId/", async (request, response) => {
   const { todoId } = request.params;
   const getTodoQuery = `
@@ -265,7 +273,7 @@ app.get("/todos/:todoId/", async (request, response) => {
   response.send(convertDbObjToResponseObj(todo));
 });
 
-//Get Specific Due Date Todo
+// Get Specific Due Date Todo API
 app.get("/agenda/", async (request, response) => {
   let { date } = request.query;
   //   console.log(typeof date);
@@ -286,7 +294,7 @@ app.get("/agenda/", async (request, response) => {
   }
 });
 
-//add TODO
+// Add Todo API
 app.post("/todos/", checkErrorCaseBody, async (request, response) => {
   const { id, todo, priority, status, category, dueDate } = request.body;
   const actualDate = getDateFmt(dueDate);
@@ -299,7 +307,7 @@ app.post("/todos/", checkErrorCaseBody, async (request, response) => {
   response.send("Todo Successfully Added");
 });
 
-//Update Todo
+// Update Todo API
 app.put("/todos/:todoId/", checkErrorCaseBody, async (request, response) => {
   const { todoId } = request.params;
   let updateColumn = "";
@@ -358,6 +366,7 @@ app.put("/todos/:todoId/", checkErrorCaseBody, async (request, response) => {
   response.send(`${updateColumn} Updated`);
 });
 
+// Delete Todo API
 app.delete("/todos/:todoId/", async (request, response) => {
   const { todoId } = request.params;
   const deleteTodoQuery = `
